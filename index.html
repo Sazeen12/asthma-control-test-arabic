@@ -35,6 +35,25 @@
     button:hover {
       background-color: #004494;
     }
+    #copyNote {
+      margin-top: 1rem;
+      background: #fff3cd;
+      border-right: 5px solid #ffc107;
+      padding: 1rem;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    #copyBtn {
+      background-color: #28a745;
+      margin-top: 0.5rem;
+    }
+    #copyBtn:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
@@ -83,6 +102,11 @@
     <button type="submit">احسب النتيجة</button>
   </form>
   <div id="result" class="result" style="display:none;"></div>
+  <div id="copyNote" style="display:none;">
+    <p><strong>يرجى نسخ النتيجة أدناه وإرسالها إلى طبيب الأسرة أو الممارس العام:</strong></p>
+    <textarea id="resultText" readonly></textarea>
+    <button id="copyBtn">نسخ إلى الحافظة</button>
+  </div>
   <script>
     document.getElementById('actForm').onsubmit = function(e) {
       e.preventDefault();
@@ -90,13 +114,28 @@
       for (let i = 1; i <= 5; i++) {
         total += parseInt(document.querySelector('input[name="q' + i + '"]:checked').value);
       }
-      const resultDiv = document.getElementById('result');
       let interpretation = '';
       if (total >= 20) interpretation = 'الربو تحت السيطرة الجيدة.';
       else if (total >= 16) interpretation = 'الربو ليس تحت السيطرة الجيدة.';
       else interpretation = 'الربو خارج السيطرة.';
-      resultDiv.innerHTML = `<strong>النتيجة الإجمالية: ${total}</strong><br>${interpretation}`;
+
+      const resultText = `النتيجة الإجمالية: ${total}\n${interpretation}`;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `<strong>${resultText.replace('\n', '<br>')}</strong>`;
       resultDiv.style.display = 'block';
+
+      const noteBox = document.getElementById('copyNote');
+      const textArea = document.getElementById('resultText');
+      textArea.value = resultText;
+      noteBox.style.display = 'block';
+    };
+
+    document.getElementById('copyBtn').onclick = function() {
+      const textArea = document.getElementById('resultText');
+      textArea.select();
+      textArea.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      alert('تم نسخ النتيجة إلى الحافظة!');
     };
   </script>
 </body>
