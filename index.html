@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>استبيان التحكم في الربو (ACT)</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      direction: rtl;
+    }
+    h1 { color: #005eb8; text-align: center; }
+    .question { margin-bottom: 1.5rem; }
+    label { display: block; margin: 0.25rem 0; }
+    .result {
+      padding: 1rem;
+      background: #eef5ff;
+      border-right: 5px solid #005eb8;
+      margin-top: 1.5rem;
+    }
+    button {
+      background-color: #005eb8;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      display: block;
+      margin: 1rem auto;
+    }
+    button:hover {
+      background-color: #004494;
+    }
+  </style>
+</head>
+<body>
+  <h1>استبيان التحكم في الربو (ACT)</h1>
+  <form id="actForm">
+    <div class="question">
+      <p>١. خلال الأسابيع الأربعة الماضية، كم مرة أزعجتك أعراض الربو (مثل الصفير أو السعال أو ضيق النفس أو الاستيقاظ في الليل)؟</p>
+      <label><input type="radio" name="q1" value="5" required> لا أبدًا (٥)</label>
+      <label><input type="radio" name="q1" value="4"> مرة أو مرتين (٤)</label>
+      <label><input type="radio" name="q1" value="3"> أحيانًا (٣)</label>
+      <label><input type="radio" name="q1" value="2"> كثيرًا (٢)</label>
+      <label><input type="radio" name="q1" value="1"> دائمًا (١)</label>
+    </div>
+    <div class="question">
+      <p>٢. خلال الأسابيع الأربعة الماضية، كم مرة استخدمت بخاخ الإنقاذ (مثل سالبوتامول)؟</p>
+      <label><input type="radio" name="q2" value="5" required> لا أبدًا (٥)</label>
+      <label><input type="radio" name="q2" value="4"> مرة في الأسبوع أو أقل (٤)</label>
+      <label><input type="radio" name="q2" value="3"> ٢–٣ مرات في الأسبوع (٣)</label>
+      <label><input type="radio" name="q2" value="2"> يوميًا (٢)</label>
+      <label><input type="radio" name="q2" value="1"> عدة مرات يوميًا (١)</label>
+    </div>
+    <div class="question">
+      <p>٣. خلال الأسابيع الأربعة الماضية، إلى أي مدى أعاقك الربو عن أداء مهامك في العمل أو المدرسة أو المنزل؟</p>
+      <label><input type="radio" name="q3" value="5" required> لم يُعقني أبدًا (٥)</label>
+      <label><input type="radio" name="q3" value="4"> أعاقني قليلًا (٤)</label>
+      <label><input type="radio" name="q3" value="3"> أعاقني إلى حد ما (٣)</label>
+      <label><input type="radio" name="q3" value="2"> أعاقني كثيرًا (٢)</label>
+      <label><input type="radio" name="q3" value="1"> أعاقني تمامًا (١)</label>
+    </div>
+    <div class="question">
+      <p>٤. خلال الأسابيع الأربعة الماضية، كيف تقيّم سيطرتك على الربو؟</p>
+      <label><input type="radio" name="q4" value="5" required> سيطرة تامة (٥)</label>
+      <label><input type="radio" name="q4" value="4"> سيطرة جيدة (٤)</label>
+      <label><input type="radio" name="q4" value="3"> سيطرة إلى حد ما (٣)</label>
+      <label><input type="radio" name="q4" value="2"> سيطرة ضعيفة (٢)</label>
+      <label><input type="radio" name="q4" value="1"> لا سيطرة (١)</label>
+    </div>
+    <div class="question">
+      <p>٥. خلال الأسابيع الأربعة الماضية، كم مرة عانيت من ضيق في التنفس؟</p>
+      <label><input type="radio" name="q5" value="5" required> لا أبدًا (٥)</label>
+      <label><input type="radio" name="q5" value="4"> مرة أو مرتين (٤)</label>
+      <label><input type="radio" name="q5" value="3"> عدة مرات في الأسبوع (٣)</label>
+      <label><input type="radio" name="q5" value="2"> في معظم الأيام (٢)</label>
+      <label><input type="radio" name="q5" value="1"> يوميًا (١)</label>
+    </div>
+    <button type="submit">احسب النتيجة</button>
+  </form>
+  <div id="result" class="result" style="display:none;"></div>
+  <script>
+    document.getElementById('actForm').onsubmit = function(e) {
+      e.preventDefault();
+      let total = 0;
+      for (let i = 1; i <= 5; i++) {
+        total += parseInt(document.querySelector('input[name="q' + i + '"]:checked').value);
+      }
+      const resultDiv = document.getElementById('result');
+      let interpretation = '';
+      if (total >= 20) interpretation = 'الربو تحت السيطرة الجيدة.';
+      else if (total >= 16) interpretation = 'الربو ليس تحت السيطرة الجيدة.';
+      else interpretation = 'الربو خارج السيطرة.';
+      resultDiv.innerHTML = `<strong>النتيجة الإجمالية: ${total}</strong><br>${interpretation}`;
+      resultDiv.style.display = 'block';
+    };
+  </script>
+</body>
+</html>
